@@ -38,7 +38,7 @@ class CameraView : public QWidget
     Q_PROPERTY(int contrast READ contrast WRITE setContrast NOTIFY contrastChanged)
     Q_PROPERTY(int hue READ hue WRITE setHue NOTIFY hueChanged)
     Q_PROPERTY(int saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
-
+    Q_PROPERTY(QRect frameRect READ frameRect WRITE setFrameRect NOTIFY frameRectChanged)
 public:
     explicit CameraView(QWidget *parent = 0);
 
@@ -54,6 +54,11 @@ public:
     int hue() const;
     int saturation() const;
 
+    QRect frameRect() const;
+
+    const QVideoFrame* currentFrame() const;
+
+    QPixmap capture();
 Q_SIGNALS:
     void sourceChanged(QCamera *source);
     void mirroredHorizontalChanged(bool mirroredHorizontal);
@@ -63,6 +68,8 @@ Q_SIGNALS:
     void contrastChanged(int contrast);
     void hueChanged(int hue);
     void saturationChanged(int saturation);
+
+    void frameRectChanged(QRect frameSize);
 
 public Q_SLOTS:
     void setSource(QCamera *source);
@@ -75,6 +82,8 @@ public Q_SLOTS:
     void setContrast(int contrast);
     void setHue(int hue);
     void setSaturation(int saturation);
+    void setFrameRect(QRect frameRect);
+
 protected:
     void paintEvent(QPaintEvent *event);
 
@@ -89,6 +98,7 @@ private:
     int m_contrast;
     int m_hue;
     int m_saturation;
+    QRect m_frameRect;
 };
 
 #endif // CAMERAVIEW_H

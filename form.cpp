@@ -36,13 +36,14 @@ Form::~Form()
 
 void Form::on_horizontalSlider_valueChanged(int value)
 {
-    viewfinder->resize(200*(1+value/50.0), 200*(1+value/50.0));
-    viewfinder->move(ui->widget->width()/2-viewfinder->width()/2, ui->widget->height()/2-viewfinder->height()/2);
+    viewfinder->setScale(1+value/50.0);
+    //viewfinder->resize(200*(1+value/50.0), 200*(1+value/50.0));
+    //viewfinder->move(ui->widget->width()/2-viewfinder->width()/2, ui->widget->height()/2-viewfinder->height()/2);
 }
 
 void Form::on_pushButton_clicked()
 {
-    ui->label->setPixmap(viewfinder->grab());
+    ui->label->setPixmap(viewfinder->capture());
 }
 
 void Form::on_pushButton_2_clicked()

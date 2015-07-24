@@ -112,6 +112,26 @@ int CameraView::saturation() const
     return m_saturation;
 }
 
+QRect CameraView::frameRect() const
+{
+    return m_frameRect;
+}
+
+const QVideoFrame *CameraView::currentFrame() const
+{
+    if(cameraFormatProxy){
+        return &cameraFormatProxy->currentFrame();
+    }else{
+        return NULL;
+    }
+}
+
+QPixmap CameraView::capture()
+{
+    QPixmap pixmap = grab(m_frameRect);
+    return pixmap;
+}
+
 void CameraView::setSource(QCamera *source)
 {
     if (m_source == source)
@@ -180,6 +200,15 @@ void CameraView::setSaturation(int saturation)
         return;
 }
 
+void CameraView::setFrameRect(QRect frameRect)
+{
+    if (m_frameRect == frameRect)
+        return;
+
+    m_frameRect = frameRect;
+    emit frameRectChanged(frameRect);
+}
+
 void CameraView::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -199,9 +228,11 @@ void CameraView::paintEvent(QPaintEvent *)
 
     image = image.scaled(size()*m_scale, m_aspectRatioMode, Qt::SmoothTransformation);
     image = image.mirrored(m_mirroredHorizontal, m_mirroredVertical);
+    QRect temp = QRect(0, 0, qMin(image.width(), width()), qMin(image.height(), height()));
+    setFrameRect(QRect(rect().center() - temp.center(), temp.size()));
 
     /*QPainterPath path;
-    int diameter = qMin(image.width(), image.height());
+    int diameter = qMin(m_frameSize.width(), m_frameSize.height());
     path.addEllipse(width()/2.0-diameter/2.0, height()/2.0-diameter/2.0, diameter, diameter);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setRenderHint(QPainter::SmoothPixmapTransform);
