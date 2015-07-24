@@ -128,8 +128,7 @@ const QVideoFrame *CameraView::currentFrame() const
 
 QPixmap CameraView::capture()
 {
-    QPixmap pixmap = grab(m_frameRect);
-    return pixmap;
+    return pixmap = grab(m_frameRect);
 }
 
 void CameraView::setSource(QCamera *source)
